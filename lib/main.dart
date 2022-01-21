@@ -1,9 +1,15 @@
 import 'dart:async';
-
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'pages/splash_page.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const ProviderScope(child: MyApp(),));
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -12,10 +18,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Flutter Google Maps Demo',
-      home: MapSample(),
+      debugShowCheckedModeBanner: false,
+      home: SplashPage(),
     );
   }
 }
+
+
 
 class MapSample extends StatefulWidget {
   const MapSample({Key? key}) : super(key: key);
