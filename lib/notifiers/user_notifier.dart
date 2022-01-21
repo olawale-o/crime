@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../models/user_model.dart';
 import '../providers/user_provider.dart';
+import '../providers/auth_provider.dart';
 
 class UserNotifier extends StateNotifier<UserModel> {
   UserNotifier(this.ref) : super(const UserModel(uid: ''));
@@ -12,6 +13,8 @@ class UserNotifier extends StateNotifier<UserModel> {
   Future<void> loginWithCredentials(String email, String password) async {
     try {
       final firebaseAuth = ref.read(firebaseAuthProvider);
+      final authenticationState = ref.read(authProvider.notifier);
+      authenticationState.isAuthenticating();
       UserCredential _userCredential = await firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
       state = state.copyWith(
@@ -20,6 +23,7 @@ class UserNotifier extends StateNotifier<UserModel> {
         name: _userCredential.user!.displayName,
         photoUrl: _userCredential.user!.photoURL,
       );
+      authenticationState.isAuthenticating();
     } catch(e) {
       print(e);
     }
@@ -28,6 +32,8 @@ class UserNotifier extends StateNotifier<UserModel> {
   Future<void> loginWithGoogle() async {
     try {
       final firebaseAuth = ref.read(firebaseAuthProvider);
+      final authenticationState = ref.read(authProvider.notifier);
+      authenticationState.isAuthenticating();
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
       final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
@@ -43,6 +49,7 @@ class UserNotifier extends StateNotifier<UserModel> {
           name: firebaseAuth.currentUser!.displayName,
           photoUrl: firebaseAuth.currentUser!.photoURL,
       );
+      authenticationState.isAuthenticating();
     } catch(e) {
       print(e);
     }

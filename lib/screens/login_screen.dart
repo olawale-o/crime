@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/user_provider.dart';
+import '../providers/auth_provider.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({Key? key,}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final loading = ref.watch(authProvider);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 50.0),
-          child: TextButton(
+          child: loading.isAuthenticating ? const Center(child: CircularProgressIndicator()) : TextButton(
             onPressed: () => ref.read(userProvider.notifier).loginWithGoogle(),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
