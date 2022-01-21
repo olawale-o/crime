@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../models/user_model.dart';
-import '../providers/auth_provider.dart';
+import '../providers/user_provider.dart';
 
 class UserNotifier extends StateNotifier<UserModel> {
   UserNotifier(this.ref) : super(const UserModel(uid: ''));

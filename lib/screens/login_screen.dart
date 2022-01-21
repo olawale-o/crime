@@ -8,22 +8,35 @@ class LoginScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Center(
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 50.0),
           child: TextButton(
-            onPressed: () => ref.read(userProvider.notifier).loginWithGoogle(), //notifier.loginWithGoogle(),
-            child: const Text(
-              'Log in',
+            onPressed: () => ref.read(userProvider.notifier).loginWithGoogle(),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Image(
+                    image: AssetImage('assets/google_logo.png'),
+                    height: 35,
+                    width: 35,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: Text('Login with google',),
+                ),
+              ],
             ),
             style: TextButton.styleFrom(
-              primary: Colors.blueAccent,
-              backgroundColor: Colors.black12,
+              primary: Colors.black38,
+              backgroundColor: Colors.white,
               shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(4.0))),
-              textStyle: const TextStyle(fontSize: 18),
+                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
-        )
+        ),
       ],
     );
   }
