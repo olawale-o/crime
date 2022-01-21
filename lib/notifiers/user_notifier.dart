@@ -18,6 +18,7 @@ class UserNotifier extends StateNotifier<UserModel> {
         uid: _userCredential.user!.uid,
         email: _userCredential.user!.email,
         name: _userCredential.user!.displayName,
+        photoUrl: _userCredential.user!.photoURL,
       );
     } catch(e) {
       print(e);
@@ -39,7 +40,8 @@ class UserNotifier extends StateNotifier<UserModel> {
       state = state.copyWith(
           email: firebaseAuth.currentUser!.email,
           uid: firebaseAuth.currentUser!.uid,
-          name: firebaseAuth.currentUser!.displayName
+          name: firebaseAuth.currentUser!.displayName,
+          photoUrl: firebaseAuth.currentUser!.photoURL,
       );
     } catch(e) {
       print(e);

@@ -1,3 +1,4 @@
+import 'package:crime/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,13 +12,19 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, _){
-      final AsyncValue<User?> _user = ref.watch(authStateProvider);;
+      final AsyncValue<User?> _user = ref.watch(authStateProvider);
       return _user.when(
         data: (data) {
           if (data == null) {
             return const LoginPage();
           }
-          return const ProfilePage();
+          return ProfilePage(
+            userModel: UserModel(
+                uid: data.uid,
+                name: data.displayName,
+                email: data.email,
+                photoUrl: data.photoURL,
+            ),);
         },
         error: (e, trace) {
           return const Center(child: Text('error'),);
