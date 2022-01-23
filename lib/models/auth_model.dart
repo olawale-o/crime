@@ -1,13 +1,13 @@
 class AuthStateModel {
-  final bool isAuthenticating;
-  const AuthStateModel({ required this.isAuthenticating });
+  final bool _isAuthenticating;
+  const AuthStateModel({required bool isAuthenticating})
+      : _isAuthenticating = isAuthenticating;
 
-  AuthStateModel copyWith({
-    bool? isAuthenticating
-  }) {
+  bool get isAuthenticating => _isAuthenticating;
+
+  AuthStateModel copyWith({bool? isAuthenticating}) {
     return AuthStateModel(
-        isAuthenticating: isAuthenticating ?? this.isAuthenticating,
+      isAuthenticating: isAuthenticating ?? this.isAuthenticating,
     );
   }
 }
-
