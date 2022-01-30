@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'pages/onboarding_page.dart';
 import 'pages/splash_page.dart';
+import 'pages/chatlist_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       title: 'Flutter Google Maps Demo',
       debugShowCheckedModeBanner: false,
-      home: OnboardingPage(),
+      home: ChatListPage(),
     );
   }
 }
