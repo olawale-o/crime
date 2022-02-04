@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:crime/providers/socket_provider.dart';
+import 'package:crime/services/socket_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,14 +9,28 @@ import 'pages/onboarding_page.dart';
 import 'pages/splash_page.dart';
 import 'pages/chatlist_page.dart';
 
+const socketUrl = 'http://10.0.2.2:3000';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const ProviderScope(child: MyApp(),));
+  var socket = SocketService(socketUrl);
+  runApp(ProviderScope(
+    overrides: [
+      socketProvider.overrideWithValue(socket.initSocket()),
+    ],
+    child: const MyApp(),));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +48,7 @@ class MapSample extends StatefulWidget {
   @override
   State<MapSample> createState() => MapSampleState();
 }
+
 
 class MapSampleState extends State<MapSample> {
   final Completer<GoogleMapController> _controller = Completer();
