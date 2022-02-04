@@ -1,4 +1,5 @@
 import 'package:crime/models/chatuser_model.dart';
+import 'package:crime/pages/chatdetail_page.dart';
 import 'package:flutter/material.dart';
 
 class ConversationList extends StatefulWidget {
@@ -16,7 +17,11 @@ class _ConversationListState extends State<ConversationList> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) => GestureDetector(
-        onTap: () => print('ole'),
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context){
+            return ChatDetailPage(id: index,);
+          }));
+        },
         child: Container(
           padding: const EdgeInsets.only(left: 16,right: 16,top: 10,bottom: 10),
           child: Row(
