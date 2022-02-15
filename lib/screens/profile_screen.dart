@@ -1,8 +1,7 @@
-import 'package:crime/models/user_model.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/user_provider.dart';
+import '../models/user_model.dart';
 
 class ProfileScreen extends ConsumerWidget {
   final UserModel userModel;

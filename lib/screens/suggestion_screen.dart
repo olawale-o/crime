@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../widgets/connection/connection_user_card.dart';
+import '../widgets/suggestion/suggestion_user_card.dart';
 import '../providers/connection_provider.dart';
 
 class SuggestionScreen extends StatelessWidget {
@@ -20,7 +20,7 @@ class SuggestionScreen extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             itemCount: data.length,
             itemBuilder: (context, index) {
-              return ConnectionUserCard(person: data[index]);
+              return SuggestionUserCard(person: data[index]);
             },
           ),
           error: (_, stack) => const Center(child: Text('error'),),

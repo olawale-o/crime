@@ -1,9 +1,9 @@
-import 'package:crime/models/person_model.dart';
 import 'package:flutter/material.dart';
+import '../../models/person_model.dart';
 
-class ConnectionUserCard extends StatelessWidget {
+class SuggestionUserCard extends StatelessWidget {
   final PersonModel person;
-  const ConnectionUserCard({Key? key, required this.person}) : super(key: key);
+  const SuggestionUserCard({Key? key, required this.person}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
