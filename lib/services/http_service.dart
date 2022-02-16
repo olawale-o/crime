@@ -10,9 +10,9 @@ class HttpService {
     return response;
   }
 
-  Future<http.Response> post(String endPoint) async {
+  Future<http.Response> post(map, String endPoint) async {
     var url = Uri.parse("$baseURI$endPoint");
-    http.Response response = await client.get(url);
+    http.Response response = await client.post(url, body: map);
     return response;
   }
 
