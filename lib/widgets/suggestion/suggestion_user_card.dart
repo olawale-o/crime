@@ -80,7 +80,7 @@ class FollowButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.0),
             border: Border.all(width: 2.0, color: Colors.black)),
         child: const Text(
-          'Follow',
+          'Connect',
           style: TextStyle(color: Colors.black),
         ),
       ),
