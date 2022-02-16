@@ -3,9 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:crime/pages/suggestion_page.dart';
-import 'package:crime/providers/socket_provider.dart';
-import 'package:crime/services/socket_service.dart';
+import 'providers/socket_provider.dart';
+import 'services/socket_service.dart';
+import 'pages/network_page.dart';
 import 'pages/onboarding_page.dart';
 import 'pages/splash_page.dart';
 import 'pages/chatlist_page.dart';
@@ -38,7 +38,7 @@ class _MyAppState extends State<MyApp> {
     return const MaterialApp(
       title: 'Flutter Google Maps Demo',
       debugShowCheckedModeBanner: false,
-      home: SuggestionPage()
+      home: SplashPage()
     );
   }
 }

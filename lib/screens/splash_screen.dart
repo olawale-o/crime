@@ -1,10 +1,10 @@
-import 'package:crime/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/user_model.dart';
 import '../pages/login_page.dart';
 import '../pages/profile_page.dart';
-import '../providers/user_provider.dart';
+import '../providers/auth_provider.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key, required }) : super(key: key);
