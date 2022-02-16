@@ -3,6 +3,7 @@ import '../models/person_model.dart';
 import '../data/datasource/remote_datasource.dart';
 
 final friendsSuggestionProvider = FutureProvider<List<PersonModel>>((ref) async {
-  var users = await RemoteDataSource.getSuggestedFriends('user/all');
+  var dataSource = RemoteDataSource();
+  var users = await dataSource.getSuggestedFriends('user/all');
   return users;
 });
