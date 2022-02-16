@@ -2,9 +2,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/user_model.dart';
 
-class AuthenticationService {
+class FireAuthenticationService {
   final FirebaseAuth _firebaseAuth;
-  const AuthenticationService(this._firebaseAuth);
+  const FireAuthenticationService(this._firebaseAuth);
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
