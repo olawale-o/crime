@@ -27,14 +27,17 @@ class AuthNotifier extends StateNotifier<AuthStateModel> {
 
   Future<void> loginWithCredentials(String email, String password) async {
     try {
-      final _authService = ref.read(firebaseAuthServiceProvider);
+      final _firebaseAuthService = ref.read(firebaseAuthServiceProvider);
       final userNotifier = ref.read(userProvider.notifier);
-      UserModel userModel = await _authService.loginWithCredentials(email, password);
+      UserModel firebaseUser = await _firebaseAuthService.loginWithCredentials(email, password);
+      UserModel user = await authenticate(
+          UserModel(uid: '', email: firebaseUser.email, password: password)
+      );
       userNotifier.updateUser(UserModel(
-        uid: userModel.uid,
-        email: userModel.email,
-        name: userModel.name,
-        photoUrl: userModel.photoUrl,
+        uid: user.uid,
+        email: user.email,
+        name: user.name,
+        photoUrl: user.photoUrl,
       ));
       isAuthenticating();
     } catch(e) {
@@ -44,15 +47,18 @@ class AuthNotifier extends StateNotifier<AuthStateModel> {
 
   Future<void> loginWithGoogle() async {
     try {
-      final _authService = ref.read(firebaseAuthServiceProvider);
+      final _firebaseAuthService = ref.read(firebaseAuthServiceProvider);
       final userNotifier = ref.read(userProvider.notifier);
       isAuthenticating();
-      UserModel userModel = await _authService.loginWithGoogle();
+      UserModel fireBaseUser = await _firebaseAuthService.loginWithGoogle();
+      UserModel user = await thirdPartyAuthenticate(
+          UserModel(uid: '', email: fireBaseUser.email, password: '')
+      );
       userNotifier.updateUser(UserModel(
-        uid: userModel.uid,
-        email: userModel.email,
-        name: userModel.name,
-        photoUrl: userModel.photoUrl,
+        uid: user.uid,
+        email: user.email,
+        name: user.name,
+        photoUrl: user.photoUrl,
       ));
       isAuthenticating();
     } catch(e) {
@@ -62,11 +68,24 @@ class AuthNotifier extends StateNotifier<AuthStateModel> {
 
   Future<void> logOut() async {
     try {
+      final userNotifier = ref.read(userProvider.notifier);
       final _authService = ref.read(firebaseAuthServiceProvider);
       await _authService.logOut();
+      userNotifier.updateUser(const UserModel(uid: ''));
     } catch (e) {
       print(e);
     }
   }
 
+  Future<UserModel> authenticate(UserModel userModel) async {
+    final authService = ref.read(authProvider.notifier);
+    UserModel user = await authService.authenticate(userModel);
+    return user;
+  }
+
+  Future<UserModel> thirdPartyAuthenticate(UserModel userModel) async {
+    final authService = ref.read(authProvider.notifier);
+    UserModel user = await authService.thirdPartyAuthenticate(userModel);
+    return user;
+  }
 }
