@@ -1,10 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user_model.dart';
 import '../pages/login_page.dart';
 import '../pages/profile_page.dart';
-import '../providers/auth_provider.dart';
+import '../providers/user_provider.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key, required }) : super(key: key);
@@ -12,18 +11,19 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, _){
-      final AsyncValue<User?> _user = ref.watch(authStateProvider);
+      // final AsyncValue<User?> _user = ref.watch(authStateProvider);
+      final _user = ref.watch(userStreamProvider);
       return _user.when(
         data: (data) {
-          if (data == null) {
+          if (data!.uid.isEmpty) {
             return const LoginPage();
           }
           return ProfilePage(
             userModel: UserModel(
-                uid: data.uid,
-                name: data.displayName,
-                email: data.email,
-                photoUrl: data.photoURL,
+              uid: data.uid,
+              name: data.name,
+              email: data.email,
+              photoUrl: data.photoUrl,
             ),);
         },
         error: (e, trace) {
