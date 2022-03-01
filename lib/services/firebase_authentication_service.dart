@@ -7,6 +7,7 @@ class FireAuthenticationService {
   const FireAuthenticationService(this._firebaseAuth);
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
+  Future<String> get currentUserToken => _firebaseAuth.currentUser!.getIdToken() ;
 
 
   Future<UserModel> loginWithCredentials(String email, String password) async {
@@ -34,6 +35,8 @@ class FireAuthenticationService {
       idToken: googleAuth.idToken,
     );
     await _firebaseAuth.signInWithCredential(credential);
+    // print(_firebaseAuth.currentUser);
+    print(await _firebaseAuth.currentUser!.getIdToken());
     return UserModel(
       uid: _firebaseAuth.currentUser!.uid,
       email: _firebaseAuth.currentUser!.email,
