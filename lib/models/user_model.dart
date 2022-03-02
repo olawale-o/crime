@@ -24,6 +24,7 @@ class UserModel {
   String? get email => _email;
   String? get name => _name;
   String? get photoUrl => _photoUrl;
+  String? get password => _password;
 
   Map<String,dynamic> toJson() {
     final  Map<String,dynamic> data = {};
@@ -35,19 +36,20 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-        uid: json["id"],
+        uid: json["_id"],
         email: json["email"],
         name: json["username"],
     );
   }
 
   UserModel copyWith(
-      {String? uid, String? email, String? name, String? photoUrl}) {
+      {String? uid, String? email, String? name, String? photoUrl, String? password}) {
     return UserModel(
       uid: uid ?? this.uid,
       email: email ?? this.email,
       name: name ?? this.name,
       photoUrl: photoUrl ?? this.photoUrl,
+      password: password ?? this.password,
     );
   }
 }
