@@ -35,8 +35,6 @@ class FireAuthenticationService {
       idToken: googleAuth.idToken,
     );
     await _firebaseAuth.signInWithCredential(credential);
-    // print(_firebaseAuth.currentUser);
-    print(await _firebaseAuth.currentUser!.getIdToken());
     return UserModel(
       uid: _firebaseAuth.currentUser!.uid,
       email: _firebaseAuth.currentUser!.email,
