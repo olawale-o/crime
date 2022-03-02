@@ -1,11 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 import '../models/user_model.dart';
+import '../providers/profile_provider.dart';
 import '../providers/user_provider.dart';
 import '../models/auth_model.dart';
 import '../providers/auth_provider.dart';
 import '../validators/email_validator.dart';
 import '../validators/password_validator.dart';
+import '../validators/username_validator.dart';
 
 class AuthNotifier extends StateNotifier<AuthStateModel> {
   AuthNotifier(this.ref) : super(const AuthStateModel(isAuthenticating: false));
@@ -20,9 +22,14 @@ class AuthNotifier extends StateNotifier<AuthStateModel> {
     state = state.copyWith(email: email, status: Formz.validate([email, state.password]));
   }
 
+  void onUsernameChanged(String value) {
+    final username = Username.dirty(value);
+    state = state.copyWith(username: username, status: Formz.validate([username, state.password]));
+  }
+
   void onPasswordChanged(String value) {
     final password = Password.dirty(value);
-    state = state.copyWith(password: password, status: Formz.validate([password, state.email]));
+    state = state.copyWith(password: password, status: Formz.validate([password, state.username]));
   }
 
   Future<void> loginWithCredentials(String email, String password) async {
@@ -30,8 +37,8 @@ class AuthNotifier extends StateNotifier<AuthStateModel> {
       final _firebaseAuthService = ref.read(firebaseAuthServiceProvider);
       final userNotifier = ref.read(userProvider.notifier);
       UserModel firebaseUser = await _firebaseAuthService.loginWithCredentials(email, password);
-      UserModel user = await authenticate(
-          UserModel(uid: '', email: firebaseUser.email, password: password)
+      UserModel user = await _createProfile(
+          UserModel(uid: firebaseUser.uid, email: firebaseUser.email, password: password)
       );
       userNotifier.updateUser(UserModel(
         uid: user.uid,
@@ -51,9 +58,32 @@ class AuthNotifier extends StateNotifier<AuthStateModel> {
       final userNotifier = ref.read(userProvider.notifier);
       isAuthenticating();
       UserModel fireBaseUser = await _firebaseAuthService.loginWithGoogle();
-      UserModel user = await thirdPartyAuthenticate(
-          UserModel(uid: '', email: fireBaseUser.email, password: '')
-      );
+      userNotifier.updateUser(UserModel(
+        uid: fireBaseUser.uid,
+        email: fireBaseUser.email,
+        name: fireBaseUser.name,
+        photoUrl: fireBaseUser.photoUrl,
+      ));
+      isAuthenticating();
+    } catch(e) {
+      print(e);
+    }
+  }
+
+  Future<void> logOut() async {
+    try {
+      final _authService = ref.read(firebaseAuthServiceProvider);
+      await _authService.logOut();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> createUserProfile(UserModel userModel) async {
+    try {
+      final userNotifier = ref.read(userProvider.notifier);
+      isAuthenticating();
+      UserModel user = await _createProfile(userModel);
       userNotifier.updateUser(UserModel(
         uid: user.uid,
         email: user.email,
@@ -66,26 +96,11 @@ class AuthNotifier extends StateNotifier<AuthStateModel> {
     }
   }
 
-  Future<void> logOut() async {
-    try {
-      final userNotifier = ref.read(userProvider.notifier);
-      final _authService = ref.read(firebaseAuthServiceProvider);
-      await _authService.logOut();
-      userNotifier.updateUser(const UserModel(uid: ''));
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<UserModel> authenticate(UserModel userModel) async {
-    final authService = ref.read(authProvider.notifier);
-    UserModel user = await authService.authenticate(userModel);
-    return user;
-  }
-
-  Future<UserModel> thirdPartyAuthenticate(UserModel userModel) async {
-    final authService = ref.read(authProvider.notifier);
-    UserModel user = await authService.thirdPartyAuthenticate(userModel);
+  Future<UserModel> _createProfile(UserModel userModel) async  {
+    final profileService = ref.read(profileServiceProvider);
+    final currentUserToken = await ref.read(firebaseAuthServiceProvider).currentUserToken;
+    var map = {'json': userModel.toJson(), 'token': currentUserToken};
+    UserModel user = await profileService.createProfile(map);
     return user;
   }
 }
