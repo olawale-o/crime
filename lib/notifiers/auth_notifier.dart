@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 import '../models/user_model.dart';
+import '../providers/loading_provider.dart';
 import '../providers/profile_provider.dart';
 import '../providers/user_provider.dart';
 import '../models/auth_model.dart';
@@ -33,9 +34,12 @@ class AuthNotifier extends StateNotifier<AuthStateModel> {
   }
 
   Future<void> loginWithCredentials(String email, String password) async {
+    final loadingController = ref.read(loadingProvider.notifier);
+    loadingController.onLoading();
     try {
       final _firebaseAuthService = ref.read(firebaseAuthServiceProvider);
       final userNotifier = ref.read(userProvider.notifier);
+      loadingController.onLoading();
       UserModel firebaseUser = await _firebaseAuthService.loginWithCredentials(email, password);
       UserModel user = await _createProfile(
           UserModel(uid: firebaseUser.uid, email: firebaseUser.email, password: password)
@@ -46,34 +50,37 @@ class AuthNotifier extends StateNotifier<AuthStateModel> {
         name: user.name,
         photoUrl: user.photoUrl,
       ));
-      isAuthenticating();
+      loadingController.onLoading();
     } catch(e) {
       print(e);
+      loadingController.onLoading();
     }
   }
 
   Future<void> loginWithGoogle() async {
+    final loadingController = ref.read(loadingProvider.notifier);
+    loadingController.onLoading();
     try {
       final _firebaseAuthService = ref.read(firebaseAuthServiceProvider);
       final userNotifier = ref.read(userProvider.notifier);
-      isAuthenticating();
       UserModel fireBaseUser = await _firebaseAuthService.loginWithGoogle();
       userNotifier.updateUser(UserModel(
         uid: fireBaseUser.uid,
         email: fireBaseUser.email,
-        name: fireBaseUser.name,
-        photoUrl: fireBaseUser.photoUrl,
       ));
-      isAuthenticating();
+      loadingController.onLoading();
     } catch(e) {
       print(e);
+      loadingController.onLoading();
     }
   }
 
   Future<void> logOut() async {
     try {
+      isAuthenticating();
       final _authService = ref.read(firebaseAuthServiceProvider);
       await _authService.logOut();
+      isAuthenticating();
     } catch (e) {
       print(e);
     }
