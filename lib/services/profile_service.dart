@@ -11,6 +11,9 @@ class ProfileService {
   Future<UserModel> getMyProfile(Map<String, dynamic> map) async {
     http.Response response = await _httpService.get('user/${map['email']}', token: map['token']);
     var data = transformRequest(response);
+    if (data == null) {
+      return const UserModel(uid: '');
+    }
     return UserModel.fromJson(data);
   }
 
@@ -22,6 +25,7 @@ class ProfileService {
 
   dynamic transformRequest(http.Response response) {
     var result = json.decode(response.body);
+    print(result);
     return result["data"]["user"];
   }
 }
