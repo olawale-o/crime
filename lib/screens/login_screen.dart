@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../pages/authentication_page.dart';
+import '../pages/login_page.dart';
+import '../providers/loading_provider.dart';
 import '../providers/auth_provider.dart';
 
 class LoginScreen extends ConsumerWidget {
@@ -8,18 +9,18 @@ class LoginScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authProvider);
+    final state = ref.watch(loadingProvider);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        authState.isAuthenticating ?
+        state.loading ?
         Container(
             margin: const EdgeInsets.symmetric(horizontal: 50.0),
             child: const Center(child: CircularProgressIndicator())
         )
-        : Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [LoginButton(), GoogleButton()],
+            : Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [LoginButton(), GoogleButton()],
         )
       ],
     );
@@ -67,20 +68,19 @@ class BaseButton extends StatelessWidget {
 class LoginButton extends StatelessWidget {
   const LoginButton({Key? key, required}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return BaseButton(
-        text: "Email and password",
-        logo: "assets/avatar.jpg",
-        voidCallback: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => const AuthenticationPage())
-          );
-        }
-    );
-  }
+@override
+Widget build(BuildContext context) {
+  return BaseButton(
+      text: "Email and password",
+      logo: "assets/avatar.jpg",
+      voidCallback: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const LoginPage())
+        );
+      }
+  );
 }
-
+}
 
 class GoogleButton extends ConsumerWidget {
   const GoogleButton({Key? key}) : super(key: key);
@@ -88,9 +88,9 @@ class GoogleButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return BaseButton(
-        text: 'Google',
-        logo:'assets/google_logo.png',
-        voidCallback: ref.read(authProvider.notifier).loginWithGoogle,);
+      text: 'Google',
+      logo:'assets/google_logo.png',
+      voidCallback: ref.read(authProvider.notifier).loginWithGoogle,);
   }
 }
 
@@ -105,7 +105,3 @@ class FaceBookButton extends ConsumerWidget {
       voidCallback: ref.read(authProvider.notifier).loginWithGoogle,);
   }
 }
-
-
-
-
