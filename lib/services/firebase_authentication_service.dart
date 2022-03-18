@@ -25,6 +25,21 @@ class FireAuthenticationService {
     }
   }
 
+  Future<UserModel> createAccountWithCredentials(String email, String password, String username) async {
+    try {
+      UserCredential _userCredential = await _firebaseAuth
+          .createUserWithEmailAndPassword(email: email, password: password);
+      return UserModel(
+        uid: _userCredential.user!.uid,
+        email: _userCredential.user!.email,
+        name: _userCredential.user!.displayName,
+      );
+    } catch(e) {
+      print(e);
+      return const UserModel(uid: '');
+    }
+  }
+
   Future<UserModel> loginWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
