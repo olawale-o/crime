@@ -57,6 +57,29 @@ class AuthNotifier extends StateNotifier<AuthStateModel> {
     }
   }
 
+  Future<void> createAccountWithCredentials(String email, String password, String username) async {
+    final loadingController = ref.read(loadingProvider.notifier);
+    loadingController.onLoading();
+    try {
+      final _firebaseAuthService = ref.read(firebaseAuthServiceProvider);
+      final userNotifier = ref.read(userProvider.notifier);
+      UserModel firebaseUser = await _firebaseAuthService.createAccountWithCredentials(email, password);
+      UserModel user = await _createProfile(
+          UserModel(uid: firebaseUser.uid, name: username, email: firebaseUser.email, password: password)
+      );
+      userNotifier.updateUser(UserModel(
+        uid: user.uid,
+        email: user.email,
+        name: user.name,
+        photoUrl: user.photoUrl,
+      ));
+      loadingController.onLoading();
+    } catch(e) {
+      print(e);
+      loadingController.onLoading();
+    }
+  }
+
   Future<void> loginWithGoogle() async {
     final loadingController = ref.read(loadingProvider.notifier);
     loadingController.onLoading();
