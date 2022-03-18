@@ -1,3 +1,4 @@
+import 'package:crime/pages/firebase_auth_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../pages/login_page.dart';
@@ -21,6 +22,14 @@ class LoginScreen extends ConsumerWidget {
             : Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [LoginButton(), GoogleButton()],
+        ),
+        TextButton(
+            onPressed: () => {
+              Navigator.push(
+                context, MaterialPageRoute(builder: (context) => const FirebaseAuthPage())
+              )
+            },
+            child: const Text('Sign up')
         )
       ],
     );
@@ -75,7 +84,7 @@ Widget build(BuildContext context) {
       logo: "assets/avatar.jpg",
       voidCallback: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const LoginPage())
+            context, MaterialPageRoute(builder: (context) => const FirebaseAuthPage())
         );
       }
   );
