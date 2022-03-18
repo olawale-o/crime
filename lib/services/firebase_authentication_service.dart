@@ -25,7 +25,7 @@ class FireAuthenticationService {
     }
   }
 
-  Future<UserModel> createAccountWithCredentials(String email, String password, String username) async {
+  Future<UserModel> createAccountWithCredentials(String email, String password) async {
     try {
       UserCredential _userCredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
