@@ -99,20 +99,23 @@ class AuthNotifier extends StateNotifier<AuthStateModel> {
   }
 
   Future<void> logOut() async {
+    final loadingController = ref.read(loadingProvider.notifier);
+    loadingController.onLoading();
     try {
-      isAuthenticating();
       final _authService = ref.read(firebaseAuthServiceProvider);
       await _authService.logOut();
-      isAuthenticating();
+      loadingController.onLoading();
     } catch (e) {
       print(e);
+      loadingController.onLoading();
     }
   }
 
   Future<void> createUserProfile(UserModel userModel) async {
+    final loadingController = ref.read(loadingProvider.notifier);
+    loadingController.onLoading();
     try {
       final userNotifier = ref.read(userProvider.notifier);
-      isAuthenticating();
       UserModel user = await _createProfile(userModel);
       userNotifier.updateUser(UserModel(
         uid: user.uid,
@@ -120,9 +123,10 @@ class AuthNotifier extends StateNotifier<AuthStateModel> {
         name: user.name,
         photoUrl: user.photoUrl,
       ));
-      isAuthenticating();
+      loadingController.onLoading();
     } catch(e) {
       print(e);
+      loadingController.onLoading();
     }
   }
 
