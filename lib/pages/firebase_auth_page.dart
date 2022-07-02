@@ -1,3 +1,4 @@
+import 'package:crime/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user_model.dart';
@@ -11,11 +12,16 @@ class FirebaseAuthPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
+    if (user.uid == '' || user.name == null){
+      return const Scaffold(
+        body: SingleChildScrollView(
+            padding: EdgeInsets.fromLTRB(8, 30, 8, 0),
+            child: FirebaseAuthScreen()
+        ),
+      );
+    }
     return Scaffold(
-      body: user.name == null ? const SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(8, 30, 8, 0),
-          child: FirebaseAuthScreen()
-      ): ProfilePage(
+      body: ProfilePage(
         userModel: UserModel(
           uid: user.uid,
           name: user.name,

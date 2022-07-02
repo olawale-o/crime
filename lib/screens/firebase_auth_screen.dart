@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:formz/formz.dart';
 import '../providers/auth_provider.dart';
+import '../providers/loading_provider.dart';
 
 class FirebaseAuthScreen extends ConsumerStatefulWidget {
   const FirebaseAuthScreen({Key? key}) : super(key: key);
@@ -19,6 +20,7 @@ class _FirebaseAuthScreenState extends ConsumerState<FirebaseAuthScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
+    final loading = ref.watch(loadingProvider);
     return Column(
         children: [
           TextField(
@@ -31,6 +33,7 @@ class _FirebaseAuthScreenState extends ConsumerState<FirebaseAuthScreen> {
                 errorText:
                 authState.username.invalid ? 'Invalid username' : null),
           ),
+          const SizedBox(height: 10,),
           TextField(
             controller: _emailController,
             onChanged: (value) =>
@@ -41,6 +44,7 @@ class _FirebaseAuthScreenState extends ConsumerState<FirebaseAuthScreen> {
                 errorText:
                 authState.email.invalid ? 'Invalid email' : null),
           ),
+          const SizedBox(height: 10,),
           TextField(
             obscureText: true,
             controller: _passwordController,
@@ -52,26 +56,29 @@ class _FirebaseAuthScreenState extends ConsumerState<FirebaseAuthScreen> {
                 errorText:
                 authState.password.invalid ? 'Invalid password' : null),
           ),
+          const SizedBox(height: 10,),
+          loading.loading ?
+          const CircularProgressIndicator() :
           Container(
-            margin:
-            const EdgeInsets.only(left: 50.0, right: 50.0, bottom: 20.0),
+            margin: const EdgeInsets.symmetric(horizontal: 50.0),
             child: TextButton(
-              onPressed: () => {
-                ref.read(authProvider.notifier).loginWithCredentials(
+              onPressed: authState.status.isValidated ?  () => {
+                ref.read(authProvider.notifier).createAccountWithCredentials(
                   _emailController.text, _passwordController.text, _usernameController.text
                 )
-              },
+              } :  null,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
                   Padding(
                     padding: EdgeInsets.only(left: 8.0),
-                    child: Text('Create'),
+                    child: Text('Create', style: TextStyle(color: Colors.white),),
                   ),
                 ],
               ),
               style: TextButton.styleFrom(
                 primary: Colors.black38,
-                backgroundColor: Colors.white,
+                backgroundColor: Colors.blueAccent,
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20.0))),
                 textStyle:

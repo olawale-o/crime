@@ -17,24 +17,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    // ref.read(userProvider.notifier).getMyProfile();
   }
   @override
   Widget build(BuildContext context) {
-    final auth = ref.watch(authProvider);
-    final user = ref.watch(userProvider);
-    return auth.isAuthenticating
-        ? const Center(
-            child: CircularProgressIndicator(),
-          )
-        : Center(
+    return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
               children: [
-                Text("Logged in as ${user.email}"),
+                Text("Logged in as ${widget.userModel.email}"),
                 TextButton(
-                    onPressed: () => ref.read(authProvider.notifier).logOut(),
+                    onPressed: (){
+                      ref.read(authProvider.notifier).logOut();
+                      ref.read(userProvider.notifier).updateUser(const UserModel(uid: ''));
+                    },
                     child: const Text('Log out'))
               ],
             ),

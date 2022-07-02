@@ -1,6 +1,9 @@
+import 'package:crime/pages/login_page.dart';
+import '../providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user_model.dart';
+import '../providers/user_provider.dart';
 import '../screens/profile_screen.dart';
 
 class ProfilePage extends ConsumerWidget {
@@ -9,6 +12,9 @@ class ProfilePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref ) {
+    final user = ref.watch(userProvider);
+    final auth = ref.watch(authProvider);
+    if (user.uid == '' || user.name == null) return const LoginPage();
     return Scaffold(
       appBar: AppBar(
         title: Text(userModel.name ?? "Username", style: const TextStyle(color: Colors.black54),),
@@ -26,7 +32,11 @@ class ProfilePage extends ConsumerWidget {
         ],
       ),
       body: SafeArea(
-        child: ProfileScreen(userModel: userModel,),
+        child: auth.isAuthenticating ?
+        const Center(
+          child: CircularProgressIndicator(),
+        ) :
+        ProfileScreen(userModel: userModel,),
       ),
     );
   }
